@@ -13,7 +13,8 @@ import auth from "./src/middleware/auth.js";
 import loanRoutes from "./src/routes/loanRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
 import adminAuth from "./src/middleware/adminAuth.js";
-
+import transactionRoutes from "./src/routes/transactionRoutes.js";
+import dashboardRoutes   from "./src/routes/dashboardRoutes.js";
 const app = express();
 
 /* ------------------------------
@@ -64,6 +65,8 @@ app.use(express.urlencoded({ limit: "20mb", extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/loans", loanRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/dashboard", dashboardRoutes);        
 
 /* ------------------------------
    ⭐ Protected test route
