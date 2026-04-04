@@ -15,6 +15,9 @@ import adminRoutes from "./src/routes/adminRoutes.js";
 import adminAuth from "./src/middleware/adminAuth.js";
 import transactionRoutes from "./src/routes/transactionRoutes.js";
 import dashboardRoutes   from "./src/routes/dashboardRoutes.js";
+import rateLimit from "express-rate-limit";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./src/config/swagger.js";
 const app = express();
 
 /* ------------------------------
@@ -22,6 +25,12 @@ const app = express();
 --------------------------------*/
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  message: { msg: "Too many requests, please try again later ❌" }
+});
 
 /* ------------------------------
    ⭐ FIX: Auto-create uploads folder on Render
@@ -62,6 +71,8 @@ app.use(express.urlencoded({ limit: "20mb", extended: true }));
 /* ------------------------------
    ⭐ API ROUTES
 --------------------------------*/
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(limiter); 
 app.use("/api/auth", authRoutes);
 app.use("/api/loans", loanRoutes);
 app.use("/api/admin", adminRoutes);
